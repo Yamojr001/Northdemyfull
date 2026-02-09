@@ -9,8 +9,44 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return view('welcome');
+    return Inertia::render('Home');
 });
+
+Route::get('/about', function () {
+    return Inertia::render('About');
+})->name('about');
+
+Route::get('/programs', function () {
+    return Inertia::render('Programs');
+})->name('programs');
+
+Route::get('/partners', function () {
+    return Inertia::render('Partners');
+})->name('partners');
+
+Route::get('/blog', function () {
+    return Inertia::render('Blog');
+})->name('blog');
+
+Route::get('/team', function () {
+    return Inertia::render('Team');
+})->name('team');
+
+Route::get('/board', function () {
+    return Inertia::render('Board');
+})->name('board');
+
+Route::get('/contact', function () {
+    return Inertia::render('Contact');
+})->name('contact');
+
+Route::get('/incubation-hub', function () {
+    return Inertia::render('IncubationHub');
+})->name('incubation');
+
+Route::get('/service/{id}', function ($id) {
+    return Inertia::render('ServiceDetail', ['id' => $id]);
+})->name('service.detail');
 
 Route::get('/login', function () {
     return Inertia::render('Auth/Login');
@@ -18,12 +54,8 @@ Route::get('/login', function () {
 
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
-        return view('welcome');
+        return Inertia::render('AdminDashboard');
     })->name('dashboard');
-
-    Route::get('/{any?}', function () {
-        return view('welcome');
-    })->where('any', '.*');
 });
 
 Route::prefix('api/admin')->middleware('auth')->group(function () {

@@ -1,18 +1,19 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, User, ArrowRight, ShieldCheck } from 'lucide-react';
 
-const AdminLogin = () => {
+const AdminLogin: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (username === 'admin' && password === 'admin') {
       localStorage.setItem('admin_token', 'true');
-      navigate('/admin/programs');
+      navigate('/admin/dashboard');
     } else {
       setError('Invalid credentials. Hint: use admin/admin');
     }
