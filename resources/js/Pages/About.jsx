@@ -2,7 +2,7 @@
 import React from 'react';
 import { Target, Eye, Award, CheckCircle2 } from 'lucide-react';
 
-const About: React.FC = () => {
+const About = () => {
   return (
     <div className="bg-white">
       {/* Header */}

@@ -2,7 +2,7 @@
 import React from 'react';
 import { BOARD } from '../constants';
 
-const Board: React.FC = () => {
+const Board = () => {
   return (
     <div className="bg-slate-50 py-24 min-h-screen">
       <div className="container mx-auto px-4 md:px-6">

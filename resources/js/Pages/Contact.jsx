@@ -3,7 +3,7 @@ import React from 'react';
 import { Mail, Phone, MapPin, Send, MessageCircle } from 'lucide-react';
 import { COMPANY_DETAILS } from '../constants';
 
-const Contact: React.FC = () => {
+const Contact = () => {
   return (
     <div className="bg-white py-24">
       <div className="container mx-auto px-4 md:px-6">

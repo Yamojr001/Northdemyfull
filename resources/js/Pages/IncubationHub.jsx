@@ -2,7 +2,7 @@
 import React from 'react';
 import { Rocket, Target, Lightbulb, TrendingUp, DollarSign, ArrowRight } from 'lucide-react';
 
-const IncubationHub: React.FC = () => {
+const IncubationHub = () => {
   const steps = [
     { icon: Lightbulb, title: "Discovery", desc: "Refining the vision and validating the core market hypothesis." },
     { icon: Target, title: "Validation", desc: "MVP development and initial product-market fit testing." },

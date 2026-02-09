@@ -4,7 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import { SERVICES } from '../constants';
 
-const ServiceDetail: React.FC = () => {
+const ServiceDetail = () => {
   const { id } = useParams();
   const service = SERVICES.find(s => s.id === id);
 

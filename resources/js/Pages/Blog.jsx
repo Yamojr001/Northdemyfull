@@ -3,7 +3,7 @@ import React from 'react';
 import { ArrowRight, Calendar, User, Tag } from 'lucide-react';
 import { BLOG_POSTS } from '../constants';
 
-const Blog: React.FC = () => {
+const Blog = () => {
   return (
     <div className="bg-white py-24">
       <div className="container mx-auto px-4 md:px-6">

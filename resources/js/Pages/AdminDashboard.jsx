@@ -15,10 +15,10 @@ import {
 } from 'lucide-react';
 import { DataManager } from '../utils/dataManager';
 
-type Tab = 'services' | 'programs' | 'blog' | 'team' | 'board';
 
-const AdminDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<Tab>('services');
+
+const AdminDashboard = () => {
+  const [activeTab, setActiveTab] = useState('services');
   const [items, setItems] = useState<any[]>([]);
   const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
@@ -153,7 +153,7 @@ const AdminDashboard: React.FC = () => {
           ].map(tab => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as Tab)}
+              onClick={() => setActiveTab(tab.id)}
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all ${
                 activeTab === tab.id ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' : 'text-slate-400 hover:text-white hover:bg-white/5'
               }`}

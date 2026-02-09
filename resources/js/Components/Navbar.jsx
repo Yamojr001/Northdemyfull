@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
 import { NavLinks } from '../constants';
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);

@@ -5,7 +5,7 @@ import { ArrowRight, CheckCircle2, Star, Users, Briefcase, Globe2, ShieldCheck, 
 import { TESTIMONIALS, PARTNERS } from '../constants';
 import { DataManager } from '../utils/dataManager';
 
-const Home: React.FC = () => {
+const Home = () => {
   const [services, setServices] = useState(DataManager.getServices());
 
   useEffect(() => {

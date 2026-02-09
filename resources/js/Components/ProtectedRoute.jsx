@@ -2,7 +2,7 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const ProtectedRoute<{ children }> = ({ children }) => {
   const isAuthenticated = localStorage.getItem('admin_token') === 'true';
   const location = useLocation();
 

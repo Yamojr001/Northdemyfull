@@ -3,7 +3,7 @@ import React from 'react';
 import { Building2, Globe, Users, Award, Shield } from 'lucide-react';
 import { PARTNERS } from '../constants';
 
-const Partners: React.FC = () => {
+const Partners = () => {
   return (
     <div className="bg-slate-50 py-20 lg:py-32">
       <div className="container mx-auto px-4">

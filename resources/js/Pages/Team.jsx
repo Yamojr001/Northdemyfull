@@ -6,7 +6,7 @@ import { ALL_TEAM } from '../constants';
 import { DataManager } from '../utils/dataManager';
 import { TeamMember, TeamCategory } from '../types';
 
-const Team: React.FC = () => {
+const Team = () => {
   const [members, setMembers] = useState<TeamMember[]>([]);
   
   useEffect(() => {

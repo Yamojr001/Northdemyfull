@@ -3,7 +3,7 @@ import React from 'react';
 import { Clock, BarChart, Tag, ArrowRight } from 'lucide-react';
 import { PROGRAMS } from '../constants';
 
-const Programs: React.FC = () => {
+const Programs = () => {
   return (
     <div className="bg-white py-20 lg:py-32">
       <div className="container mx-auto px-4">

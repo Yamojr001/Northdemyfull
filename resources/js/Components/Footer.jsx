@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Mail, Phone, MapPin, Linkedin, Twitter, Facebook, Instagram, Send, Lock, } from 'lucide-react';
 import { COMPANY_DETAILS } from '../constants';
 
-const Footer: React.FC = () => {
+const Footer = () => {
   return (
     <footer className="bg-slate-950 text-slate-300 pt-16 pb-8">
       <div className="container mx-auto px-4 md:px-6">
