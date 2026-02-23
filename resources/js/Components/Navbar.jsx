@@ -1,14 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from '@inertiajs/react';
 import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
 import { NavLinks } from '../constants';
+import logoImg from '@/asset/logo.jpg';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState(null);
   const [scrolled, setScrolled] = useState(false);
-  const location = useLocation();
 
   // Handle scroll effect
   useEffect(() => {
@@ -18,13 +18,6 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // Close mobile menu on route change
-  useEffect(() => {
-    setIsOpen(false);
-    setActiveDropdown(null);
-    document.body.style.overflow = 'unset'; // Reset overflow when route changes
-  }, [location]);
 
   const toggleMenu = () => {
     const nextState = !isOpen;
@@ -42,9 +35,9 @@ const Navbar = () => {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 group z-[110]">
+          <Link href="/" className="flex items-center space-x-2 group z-[110]">
             <img 
-              src="https://prep-ai.xyz/ogasaid/nd5.jpg" 
+              src={logoImg} 
               alt="NorthDemy Logo" 
               className="w-32 sm:w-40 h-12 sm:h-14 object-contain transition-transform group-hover:scale-105" 
             />
@@ -65,7 +58,7 @@ const Navbar = () => {
                   </button>
                 ) : (
                   <Link
-                    to={link.path}
+                    href={link.path}
                     className={`text-[15px] font-bold transition-colors ${
                       location.pathname === link.path ? 'text-blue-600' : 'text-slate-700 hover:text-blue-600'
                     }`}
@@ -80,7 +73,7 @@ const Navbar = () => {
                     {link.children.map((child) => (
                       <Link
                         key={child.name}
-                        to={child.path}
+                        href={child.path}
                         className={`block px-6 py-2.5 text-sm font-semibold transition-colors ${
                           location.pathname === child.path ? 'text-blue-600 bg-blue-50' : 'text-slate-600 hover:bg-blue-50 hover:text-blue-600'
                         }`}
@@ -96,10 +89,10 @@ const Navbar = () => {
 
           {/* Desktop CTAs */}
           <div className="hidden lg:flex items-center space-x-4">
-            <Link to="/programs" className="px-6 py-2.5 rounded-xl border-2 border-blue-600 text-blue-600 font-bold hover:bg-blue-600 hover:text-white transition-all">
+            <Link href="/programs" className="px-6 py-2.5 rounded-xl border-2 border-blue-600 text-blue-600 font-bold hover:bg-blue-600 hover:text-white transition-all">
               Apply Now
             </Link>
-            <Link to="/contact" className="px-6 py-2.5 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">
+            <Link href="/contact" className="px-6 py-2.5 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">
               Partner
             </Link>
           </div>
@@ -135,7 +128,7 @@ const Navbar = () => {
                   }}
                 >
                   <Link 
-                    to={link.path} 
+                    href={link.path} 
                     className={`text-xl font-extrabold transition-colors ${
                       location.pathname === link.path ? 'text-blue-600' : 'text-slate-900'
                     }`}
@@ -165,7 +158,7 @@ const Navbar = () => {
                       {link.children.map((child) => (
                         <Link 
                           key={child.name} 
-                          to={child.path} 
+                          href={child.path} 
                           className={`text-[15px] font-bold transition-colors ${
                             location.pathname === child.path ? 'text-blue-600' : 'text-slate-600 hover:text-blue-600'
                           }`}
@@ -183,14 +176,14 @@ const Navbar = () => {
           {/* Mobile CTAs */}
           <div className="mt-8 space-y-4">
             <Link 
-              to="/programs" 
+              href="/programs" 
               className="flex items-center justify-center space-x-3 w-full py-4 bg-blue-600 text-white font-black text-lg rounded-2xl shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all"
             >
               <span>Apply Now</span>
               <ArrowRight size={20} />
             </Link>
             <Link 
-              to="/contact" 
+              href="/contact" 
               className="flex items-center justify-center w-full py-4 border-2 border-slate-200 text-slate-900 font-black text-lg rounded-2xl hover:bg-slate-50 transition-all"
             >
               Partner With Us

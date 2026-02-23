@@ -13,13 +13,13 @@ import {
   Trash2,
   CheckCircle2
 } from 'lucide-react';
-import { DataManager } from '../utils/dataManager';
+import { DataManager } from '../utils1/dataManager';
 
 
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('services');
-  const [items, setItems] = useState<any[]>([]);
+  const [items, setItems] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
 
@@ -46,7 +46,7 @@ const AdminDashboard = () => {
     navigate('/');
   };
 
-  const handleAdd = (e: React.FormEvent) => {
+  const handleAdd = (e) => {
     e.preventDefault();
     switch(activeTab) {
       case 'services': DataManager.addService(formData); break;
@@ -61,9 +61,9 @@ const AdminDashboard = () => {
     setFormData({});
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this item?')) {
-      const keyMap: Record<Tab, any> = { services: 'SERVICES', programs: 'PROGRAMS', blog: 'BLOG', team: 'TEAM', board: 'BOARD' };
+      const keyMap = { services: 'SERVICES', programs: 'PROGRAMS', blog: 'BLOG', team: 'TEAM', board: 'BOARD' };
       DataManager.deleteItem(keyMap[activeTab], id);
       loadData();
     }

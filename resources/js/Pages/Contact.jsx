@@ -1,11 +1,69 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, MessageCircle } from 'lucide-react';
 import { COMPANY_DETAILS } from '../constants';
+import Navbar from '../Components/Navbar';
+import Footer from '../Components/Footer';
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+    phone: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess(false);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess(true);
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: '',
+          phone: ''
+        });
+        setTimeout(() => setSuccess(false), 5000);
+      } else {
+        setError(data.message || 'Failed to send message');
+      }
+    } catch (err) {
+      setError('Network error. Please try again.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="bg-white py-24">
+    <div className="bg-white min-h-screen">
+      <Navbar />
+      <div className="py-24">
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex flex-col lg:flex-row gap-20">
           {/* Info Side */}
@@ -80,40 +138,91 @@ const Contact = () => {
           <div className="lg:w-1/2">
              <div className="bg-white p-8 md:p-12 rounded-[40px] shadow-2xl border border-slate-100">
                 <h3 className="text-3xl font-bold text-slate-900 mb-8">Send a Message</h3>
-                <form className="space-y-6">
+                
+                {success && (
+                  <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-2xl">
+                    <p className="text-green-800 font-semibold">✓ Thank you! Your message has been sent successfully.</p>
+                  </div>
+                )}
+                
+                {error && (
+                  <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl">
+                    <p className="text-red-800 font-semibold">✗ {error}</p>
+                  </div>
+                )}
+                
+                <form onSubmit={handleSubmit} className="space-y-6">
                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                         <label className="text-sm font-bold text-slate-700 ml-1">First Name</label>
-                         <input type="text" placeholder="John" className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-blue-500 focus:bg-white outline-none transition-all" />
+                         <label className="text-sm font-bold text-slate-700 ml-1">Full Name</label>
+                         <input 
+                           type="text" 
+                           name="name"
+                           value={formData.name}
+                           onChange={handleChange}
+                           placeholder="Musa Abdullahi" 
+                           required
+                           className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-blue-500 focus:bg-white outline-none transition-all" 
+                         />
                       </div>
                       <div className="space-y-2">
-                         <label className="text-sm font-bold text-slate-700 ml-1">Last Name</label>
-                         <input type="text" placeholder="Doe" className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-blue-500 focus:bg-white outline-none transition-all" />
+                         <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
+                         <input 
+                           type="email" 
+                           name="email"
+                           value={formData.email}
+                           onChange={handleChange}
+                           placeholder="musa@example.com" 
+                           required
+                           className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-blue-500 focus:bg-white outline-none transition-all" 
+                         />
                       </div>
                    </div>
                    
                    <div className="space-y-2">
-                      <label className="text-sm font-bold text-slate-700 ml-1">Email Address</label>
-                      <input type="email" placeholder="john@example.com" className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-blue-500 focus:bg-white outline-none transition-all" />
+                      <label className="text-sm font-bold text-slate-700 ml-1">Phone Number</label>
+                      <input 
+                        type="tel" 
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        placeholder="+1 (555) 123-4567" 
+                        className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-blue-500 focus:bg-white outline-none transition-all" 
+                      />
                    </div>
 
                    <div className="space-y-2">
                       <label className="text-sm font-bold text-slate-700 ml-1">Subject</label>
-                      <select className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-blue-500 focus:bg-white outline-none transition-all">
-                         <option>Tech Training Inquiry</option>
-                         <option>Startup Incubation Hub</option>
-                         <option>Digital Safety Partnership</option>
-                         <option>General Support</option>
-                      </select>
+                      <input 
+                        type="text" 
+                        name="subject"
+                        value={formData.subject}
+                        onChange={handleChange}
+                        placeholder="What is this about?" 
+                        required
+                        className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-blue-500 focus:bg-white outline-none transition-all" 
+                      />
                    </div>
 
                    <div className="space-y-2">
                       <label className="text-sm font-bold text-slate-700 ml-1">Your Message</label>
-                      <textarea rows={4} placeholder="How can we help you today?" className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-blue-500 focus:bg-white outline-none transition-all resize-none"></textarea>
+                      <textarea 
+                        rows={4} 
+                        name="message"
+                        value={formData.message}
+                        onChange={handleChange}
+                        placeholder="How can we help you today?" 
+                        required
+                        minLength="10"
+                        className="w-full px-6 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:border-blue-500 focus:bg-white outline-none transition-all resize-none">
+                      </textarea>
                    </div>
 
-                   <button className="w-full py-5 rounded-2xl bg-blue-600 text-white font-black text-lg flex items-center justify-center space-x-3 hover:bg-blue-700 transition-all shadow-xl shadow-blue-200 group">
-                      <span>Send Message</span>
+                   <button 
+                     type="submit"
+                     disabled={loading}
+                     className="w-full py-5 rounded-2xl bg-blue-600 text-white font-black text-lg flex items-center justify-center space-x-3 hover:bg-blue-700 disabled:bg-gray-400 transition-all shadow-xl shadow-blue-200 group">
+                      <span>{loading ? 'Sending...' : 'Send Message'}</span>
                       <Send size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                    </button>
                    
@@ -125,6 +234,8 @@ const Contact = () => {
           </div>
         </div>
       </div>
+      </div>
+      <Footer />
     </div>
   );
 };

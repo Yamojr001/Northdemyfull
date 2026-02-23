@@ -1,22 +1,87 @@
-
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle2, Star, Users, Briefcase, Globe2, ShieldCheck, GraduationCap, Rocket, Code, TrendingUp, Mail, Phone, Quote } from 'lucide-react';
-import { TESTIMONIALS, PARTNERS } from '../constants';
-import { DataManager } from '../utils/dataManager';
+import { Link } from '@inertiajs/react';
+import { ArrowRight, Star, Users, ShieldCheck, GraduationCap, Rocket, Code, TrendingUp, Quote } from 'lucide-react';
+import axios from 'axios';
+import Navbar from '../Components/Navbar';
+import Footer from '../Components/Footer';
+import NewsletterSubscribe from '../Components/NewsletterSubscribe';
 
 const Home = () => {
-  const [services, setServices] = useState(DataManager.getServices());
+  const [services, setServices] = useState([]);
+  const [testimonials, setTestimonials] = useState([]);
+  const [partners, setPartners] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const handleUpdate = () => setServices(DataManager.getServices());
-    window.addEventListener('data-updated', handleUpdate);
-    return () => window.removeEventListener('data-updated', handleUpdate);
+    fetchData();
   }, []);
 
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Fetch multiple endpoints in parallel
+      const [testimonialsRes, partnersRes, servicesRes] = await Promise.all([
+        axios.get('/api/testimonials'),
+        axios.get('/api/partners'),
+        axios.get('/api/services')
+      ]);
+
+      setTestimonials(testimonialsRes.data);
+      setPartners(partnersRes.data);
+      setServices(servicesRes.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setError('Failed to load data. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Icon mapping object
+  const iconComponents = {
+    GraduationCap,
+    Rocket,
+    ShieldCheck,
+    Code,
+    TrendingUp,
+    Users
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-600 mb-4">Error: {error}</div>
+          <button 
+            onClick={fetchData}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="overflow-hidden">
-       {/* Hero Section */}
+    <>
+      <Navbar />
+      <div className="overflow-hidden pt-[73px]">
+        {/* Hero Section */}
       <section className="relative pt-16 pb-24 lg:pt-32 lg:pb-40 bg-white">
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex flex-col lg:flex-row items-center gap-16">
@@ -26,7 +91,7 @@ const Home = () => {
                 <span>Your Partner in Digital Safety and Growth</span>
               </div>
               <h1 className="text-5xl lg:text-7xl font-extrabold text-slate-900 leading-[1.1]">
-                Building Africa’s <br />
+                Building Africa's <br />
                 <span className="text-blue-600">Secure </span> <br />
                 Digital Future
               </h1>
@@ -34,13 +99,19 @@ const Home = () => {
                 NorthDemy is a leading technology innovation, talent incubation, and digital security organization delivering world class training, enterprise systems, and mission critical solutions. We partner with governments, security agencies, and private enterprises to build skilled talent, deploy secure digital infrastructure, and address complex national and global challenges through advanced technology.
               </p>
               <div className="flex flex-wrap gap-4 pt-4">
-                <button className="px-8 py-4 rounded-xl bg-blue-600 text-white font-bold flex items-center space-x-2 hover:bg-blue-700 transition-all shadow-xl shadow-blue-200">
+                <Link 
+                  to="/programs" 
+                  className="px-8 py-4 rounded-xl bg-blue-600 text-white font-bold flex items-center space-x-2 hover:bg-blue-700 transition-all shadow-xl shadow-blue-200"
+                >
                   <span>Apply Now</span>
                   <ArrowRight size={20} />
-                </button>
-                <button className="px-8 py-4 rounded-xl border-2 border-slate-100 text-slate-800 font-bold hover:bg-slate-50 transition-all">
+                </Link>
+                <Link 
+                  to="/partners" 
+                  className="px-8 py-4 rounded-xl border-2 border-slate-100 text-slate-800 font-bold hover:bg-slate-50 transition-all"
+                >
                   Partner With Us
-                </button>
+                </Link>
               </div>
               
               <div className="grid grid-cols-3 gap-8 pt-10">
@@ -112,11 +183,17 @@ const Home = () => {
       <section className="py-12 border-y border-slate-100 bg-slate-50/30 overflow-hidden">
         <div className="container mx-auto px-4 text-center">
           <p className="text-sm font-bold text-slate-400 uppercase tracking-[0.2em] mb-8">Trusted by Global Ecosystem Leaders</p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60">
-            {PARTNERS.map((p, i) => (
-              <span key={i} className="text-2xl font-black text-slate-300 select-none hover:text-blue-600 transition-colors">{p.name}</span>
-            ))}
-          </div>
+          {partners.length > 0 ? (
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60">
+              {partners.map((partner) => (
+                <span key={partner.id} className="text-2xl font-black text-slate-300 select-none hover:text-blue-600 transition-colors">
+                  {partner.name}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <p className="text-slate-400">No partners available at the moment.</p>
+          )}
         </div>
       </section>
 
@@ -131,29 +208,33 @@ const Home = () => {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((service, idx) => {
-              const IconComp = {
-                GraduationCap, Rocket, ShieldCheck, Code, TrendingUp, Users
-              }[service.icon as string] || Code;
-              
-              return (
-                <div key={idx} className="bg-white p-10 rounded-3xl border border-slate-100 hover:border-blue-200 hover:shadow-2xl hover:shadow-blue-100 transition-all group flex flex-col items-start h-full">
-                  <div className="w-16 h-16 rounded-2xl bg-slate-50 text-slate-900 mb-8 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
-                    <IconComp size={32} />
+          {services.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {services.map((service) => {
+                const IconComp = iconComponents[service.icon] || Code;
+                
+                return (
+                  <div key={service.id} className="bg-white p-10 rounded-3xl border border-slate-100 hover:border-blue-200 hover:shadow-2xl hover:shadow-blue-100 transition-all group flex flex-col items-start h-full">
+                    <div className="w-16 h-16 rounded-2xl bg-slate-50 text-slate-900 mb-8 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
+                      <IconComp size={32} />
+                    </div>
+                    <h3 className="text-2xl font-bold text-slate-900 mb-4">{service.title}</h3>
+                    <p className="text-slate-600 leading-relaxed mb-8 flex-grow">
+                      {service.description}
+                    </p>
+                    <Link to={service.link || `/services/${service.id}`} className="flex items-center space-x-2 text-blue-600 font-bold hover:space-x-4 transition-all">
+                      <span>Learn More</span>
+                      <ArrowRight size={18} />
+                    </Link>
                   </div>
-                  <h3 className="text-2xl font-bold text-slate-900 mb-4">{service.title}</h3>
-                  <p className="text-slate-600 leading-relaxed mb-8 flex-grow">
-                    {service.description}
-                  </p>
-                  <Link to={service.link || `/services/${service.id}`} className="flex items-center space-x-2 text-blue-600 font-bold hover:space-x-4 transition-all">
-                    <span>Learn More</span>
-                    <ArrowRight size={18} />
-                  </Link>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-slate-500 text-lg">No services available at the moment.</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -171,39 +252,58 @@ const Home = () => {
               </div>
             </div>
             
-            <div className="lg:w-1/2 grid grid-cols-1 gap-6">
-              {TESTIMONIALS.map((t) => (
-                <div key={t.id} className="bg-white/5 border border-white/10 p-8 rounded-[32px] backdrop-blur-sm">
-                  <Quote size={32} className="text-blue-400 mb-4 opacity-50" />
-                  <p className="text-xl italic text-slate-300 leading-relaxed mb-8">"{t.quote}"</p>
-                  <div className="flex items-center space-x-4">
-                    <img src={t.image} alt={t.author} className="w-12 h-12 rounded-full object-cover border-2 border-blue-400" />
-                    <div>
-                      <div className="font-bold text-white">{t.author}</div>
-                      <div className="text-blue-400 text-sm">{t.role}</div>
+            {testimonials.length > 0 ? (
+              <div className="lg:w-1/2 grid grid-cols-1 gap-6">
+                {testimonials.map((testimonial) => (
+                  <div key={testimonial.id} className="bg-white/5 border border-white/10 p-8 rounded-[32px] backdrop-blur-sm">
+                    <Quote size={32} className="text-blue-400 mb-4 opacity-50" />
+                    <p className="text-xl italic text-slate-300 leading-relaxed mb-8">"{testimonial.quote}"</p>
+                    <div className="flex items-center space-x-4">
+                      <img 
+                        src={testimonial.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(testimonial.author)}&background=1e40af&color=fff`} 
+                        alt={testimonial.author} 
+                        className="w-12 h-12 rounded-full object-cover border-2 border-blue-400" 
+                      />
+                      <div>
+                        <div className="font-bold text-white">{testimonial.author}</div>
+                        <div className="text-blue-400 text-sm">{testimonial.role}</div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="lg:w-1/2 text-center">
+                <p className="text-slate-400">No testimonials available at the moment.</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
 
       {/* CTA Final */}
       <section className="py-24">
-         <div className="container mx-auto px-4">
-            <div className="bg-blue-600 rounded-[48px] p-12 lg:p-24 text-center text-white relative overflow-hidden">
-               <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-               <h2 className="text-4xl lg:text-6xl font-black mb-8 relative z-10">Ready to transform <br /> your future?</h2>
-               <div className="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
-                  <Link to="/programs" className="px-10 py-5 bg-white text-blue-600 font-black rounded-2xl hover:bg-slate-900 hover:text-white transition-all shadow-2xl">Start Training</Link>
-                  <Link to="/incubation" className="px-10 py-5 bg-slate-900 text-white font-black rounded-2xl hover:bg-white hover:text-blue-600 transition-all shadow-2xl">Incubate Startup</Link>
-               </div>
+        <div className="container mx-auto px-4">
+          <div className="bg-blue-600 rounded-[48px] p-12 lg:p-24 text-center text-white relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+            <h2 className="text-4xl lg:text-6xl font-black mb-8 relative z-10">Ready to transform <br /> your future?</h2>
+            <div className="flex flex-col sm:flex-row justify-center gap-4 relative z-10">
+              <Link to="/programs" className="px-10 py-5 bg-white text-blue-600 font-black rounded-2xl hover:bg-slate-900 hover:text-white transition-all shadow-2xl">Start Training</Link>
+              <Link to="/incubation" className="px-10 py-5 bg-slate-900 text-white font-black rounded-2xl hover:bg-white hover:text-blue-600 transition-all shadow-2xl">Incubate Startup</Link>
             </div>
-         </div>
+          </div>
+        </div>
       </section>
-    </div>
+
+      {/* Newsletter Section */}
+      <section className="py-24 bg-slate-50">
+        <div className="container mx-auto px-4">
+          <NewsletterSubscribe />
+        </div>
+      </section>
+      </div>
+      <Footer />
+    </>
   );
 };
 

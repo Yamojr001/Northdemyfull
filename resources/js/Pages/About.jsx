@@ -1,10 +1,13 @@
 
 import React from 'react';
 import { Target, Eye, Award, CheckCircle2 } from 'lucide-react';
+import Navbar from '../Components/Navbar';
+import Footer from '../Components/Footer';
 
 const About = () => {
   return (
-    <div className="bg-white">
+    <div className="bg-white min-h-screen">
+      <Navbar />
       {/* Header */}
       <section className="py-24 bg-slate-50 border-b border-slate-100">
         <div className="container mx-auto px-4 md:px-6 text-center max-w-4xl">
@@ -104,6 +107,8 @@ const About = () => {
           </div>
         </div>
       </section>
+      
+      <Footer />
     </div>
   );
 };

@@ -9,7 +9,7 @@ const AdminLogin = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = (e) => {
     e.preventDefault();
     if (username === 'admin' && password === 'admin') {
       localStorage.setItem('admin_token', 'true');

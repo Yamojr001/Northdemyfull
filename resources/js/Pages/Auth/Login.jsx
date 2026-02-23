@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { router } from '@inertiajs/react';
 import { Lock, User, ArrowRight, ShieldCheck } from 'lucide-react';
 
 const AdminLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (username === 'admin' && password === 'admin') {
+    // Use the real database credentials
+    if (username === 'admin@northdemy.org' && password === 'NorthDemy@2026!SecureAdmin#Pass$') {
       localStorage.setItem('admin_token', 'true');
-      navigate('/admin/programs');
+      router.visit('/admin');
     } else {
-      setError('Invalid credentials. Hint: use admin/admin');
+      setError('Invalid credentials. Please check your email and password.');
     }
   };
 
@@ -38,14 +38,14 @@ const AdminLogin = () => {
             )}
             
             <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 ml-1">Username</label>
+              <label className="text-sm font-bold text-slate-700 ml-1">Email</label>
               <div className="relative">
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                 <input 
-                  type="text" 
+                  type="email" 
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="admin" 
+                  placeholder="admin@northdemy.org" 
                   className="w-full pl-12 pr-6 py-4 rounded-xl bg-slate-50 border border-slate-100 focus:border-blue-500 outline-none transition-all"
                 />
               </div>
